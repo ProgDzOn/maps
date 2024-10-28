@@ -6,27 +6,44 @@
     <title>Recherche de Lieux</title>
     <style>
         body {
-            background: #f0f4f8;
+            background: url('https://source.unsplash.com/1600x900/?nature,landscape') no-repeat center center fixed;
+            background-size: cover;
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100vh;
+            color: #fff;
+            text-align: center; /* نص مركزي */
+        }
+        .header {
+            margin-bottom: 20px;
+            animation: fadeIn 2s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .search-box {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             padding: 30px;
             width: 90%;
             max-width: 500px;
-            text-align: center;
+            margin: 0 auto; /* توسيط الصندوق */
         }
         h2 {
             color: #276495;
             margin-bottom: 20px;
+            animation: slideIn 2s;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         input {
             border: 2px solid #ccc;
@@ -57,20 +74,47 @@
         button:hover {
             background-color: #1f4b73;
         }
-        /* Media Queries pour un design responsive */
+        .date-time {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        /* Media Queries لتكييف التصميم */
         @media (max-width: 768px) {
             .search-box {
                 padding: 20px;
             }
+            h2 {
+                font-size: 24px; /* حجم الخط على الهواتف */
+            }
             input, button {
-                font-size: 14px;
+                font-size: 14px; /* حجم الخط للعناصر */
+            }
+        }
+        @media (max-width: 480px) {
+            .search-box {
+                padding: 15px;
+            }
+            h2 {
+                font-size: 20px; /* حجم الخط على الهواتف الصغيرة */
+            }
+            input, button {
+                font-size: 12px; /* حجم الخط للعناصر على الهواتف الصغيرة */
             }
         }
     </style>
 </head>
 <body>
-    <div class="search-box">
+    <div class="header">
         <h2>Recherche de Lieux</h2>
+        <div class="date-time" id="dateTime"></div>
+    </div>
+
+    <div class="search-box">
         <input type="text" id="place1" placeholder="Entrez le premier lieu" required>
         <input type="text" id="place2" placeholder="Entrez le deuxième lieu" required>
         <button onclick="searchPlaces()">Rechercher la Distance</button>
@@ -80,18 +124,26 @@
         function searchPlaces() {
             const place1 = document.getElementById('place1').value;
             const place2 = document.getElementById('place2').value;
-            
+
             if (place1 && place2) {
                 const formattedPlace1 = encodeURIComponent(place1);
                 const formattedPlace2 = encodeURIComponent(place2);
-                
+
                 const url = `https://www.google.com/maps/dir/${formattedPlace1}/${formattedPlace2}`;
-                
                 window.open(url, '_blank');
             } else {
                 alert('Veuillez entrer les deux lieux pour rechercher la distance entre eux.');
             }
         }
+
+        function updateDateTime() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            document.getElementById('dateTime').textContent = now.toLocaleString('fr-FR', options);
+        }
+
+        setInterval(updateDateTime, 1000); // تحديث الوقت كل ثانية
+        window.onload = updateDateTime; // عرض الوقت عند تحميل الصفحة
     </script>
 </body>
 </html>
