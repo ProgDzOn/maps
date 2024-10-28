@@ -7,62 +7,66 @@
     <style>
         body {
             background: #f0f4f8;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             height: 100vh;
         }
         .search-box {
             background: #fff;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
             width: 90%;
             max-width: 500px;
             text-align: center;
-            margin-bottom: 20px;
         }
         h2 {
-            margin-bottom: 20px;
             color: #276495;
+            margin-bottom: 20px;
         }
         input {
-            border: 2px solid #aaa;
+            border: 2px solid #ccc;
             border-radius: 4px;
-            padding: 10px;
+            padding: 12px;
             width: 100%;
             font-size: 16px;
             margin: 10px 0;
             background: #e7f1fa;
             color: #333;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #276495;
+            outline: none;
         }
         button {
-            padding: 10px 20px;
+            padding: 12px 20px;
             cursor: pointer;
             background-color: #276495;
             color: #fff;
             border: none;
             border-radius: 4px;
             font-size: 16px;
-            transition: background-color 0.3s;
             width: 100%;
+            transition: background-color 0.3s;
         }
         button:hover {
             background-color: #1f4b73;
         }
-        #map {
-            height: 500px;
-            width: 90%;
-            max-width: 800px;
-            margin: 20px 0;
-            border-radius: 8px;
-            overflow: hidden;
+        /* Media Queries pour un design responsive */
+        @media (max-width: 768px) {
+            .search-box {
+                padding: 20px;
+            }
+            input, button {
+                font-size: 14px;
+            }
         }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
 </head>
 <body>
     <div class="search-box">
@@ -71,48 +75,23 @@
         <input type="text" id="place2" placeholder="Entrez le deuxième lieu" required>
         <button onclick="searchPlaces()">Rechercher la Distance</button>
     </div>
-    <div id="map"></div>
 
     <script>
-        let map;
-        let directionsService;
-        let directionsRenderer;
-
-        function initMap() {
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 20.5937, lng: 78.9629 }, // مركز افتراضي
-                zoom: 2,
-            });
-            directionsService = new google.maps.DirectionsService();
-            directionsRenderer = new google.maps.DirectionsRenderer();
-            directionsRenderer.setMap(map);
-        }
-
         function searchPlaces() {
-            const place1 = document.getElementById('place1').value.trim();
-            const place2 = document.getElementById('place2').value.trim();
+            const place1 = document.getElementById('place1').value;
+            const place2 = document.getElementById('place2').value;
             
             if (place1 && place2) {
-                const request = {
-                    origin: place1,
-                    destination: place2,
-                    travelMode: 'DRIVING',
-                };
-
-                directionsService.route(request, (result, status) => {
-                    if (status === 'OK') {
-                        directionsRenderer.setDirections(result);
-                    } else {
-                        alert('Erreur: ' + status);
-                    }
-                });
+                const formattedPlace1 = encodeURIComponent(place1);
+                const formattedPlace2 = encodeURIComponent(place2);
+                
+                const url = `https://www.google.com/maps/dir/${formattedPlace1}/${formattedPlace2}`;
+                
+                window.open(url, '_blank');
             } else {
                 alert('Veuillez entrer les deux lieux pour rechercher la distance entre eux.');
             }
         }
-
-        window.onload = initMap;
     </script>
 </body>
 </html>
-
