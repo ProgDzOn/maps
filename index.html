@@ -1,78 +1,117 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حساب المسافات</title>
+    <title>Recherche de Lieux</title>
     <style>
         body {
+            background: #f0f4f8;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        .search-box {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
             text-align: center;
-            margin: 20px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #276495;
         }
         input {
-            margin: 10px;
+            border: 2px solid #aaa;
+            border-radius: 4px;
             padding: 10px;
-            width: 200px;
+            width: 100%;
+            font-size: 16px;
+            margin: 10px 0;
+            background: #e7f1fa;
+            color: #333;
         }
         button {
             padding: 10px 20px;
+            cursor: pointer;
+            background-color: #276495;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #1f4b73;
         }
         #map {
-            height: 400px;
-            width: 100%;
-            margin-top: 20px;
+            height: 500px;
+            width: 90%;
+            max-width: 800px;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
         }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
 </head>
 <body>
-
-    <h1>حساب المسافات بين موقعين</h1>
-    <input id="locationA" type="text" placeholder="المكان أ">
-    <input id="locationB" type="text" placeholder="المكان ب">
-    <button onclick="calculateDistance()">احسب المسافة</button>
-
-    <div id="output"></div>
+    <div class="search-box">
+        <h2>Recherche de Lieux</h2>
+        <input type="text" id="place1" placeholder="Entrez le premier lieu" required>
+        <input type="text" id="place2" placeholder="Entrez le deuxième lieu" required>
+        <button onclick="searchPlaces()">Rechercher la Distance</button>
+    </div>
     <div id="map"></div>
 
     <script>
         let map;
+        let directionsService;
+        let directionsRenderer;
 
         function initMap() {
             map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 20.5937, lng: 78.9629 }, // مركز الهند كمثال
+                center: { lat: 20.5937, lng: 78.9629 }, // مركز افتراضي
                 zoom: 2,
             });
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
         }
 
-        function calculateDistance() {
-            const locationA = document.getElementById("locationA").value;
-            const locationB = document.getElementById("locationB").value;
-            const directionsService = new google.maps.DirectionsService();
+        function searchPlaces() {
+            const place1 = document.getElementById('place1').value.trim();
+            const place2 = document.getElementById('place2').value.trim();
             
-            const request = {
-                origin: locationA,
-                destination: locationB,
-                travelMode: 'DRIVING',
-            };
+            if (place1 && place2) {
+                const request = {
+                    origin: place1,
+                    destination: place2,
+                    travelMode: 'DRIVING',
+                };
 
-            directionsService.route(request, (result, status) => {
-                if (status === 'OK') {
-                    const distance = result.routes[0].legs[0].distance.text;
-                    document.getElementById("output").innerText = `المسافة بين ${locationA} و ${locationB} هي: ${distance}`;
-                    
-                    const directionsRenderer = new google.maps.DirectionsRenderer();
-                    directionsRenderer.setMap(map);
-                    directionsRenderer.setDirections(result);
-                } else {
-                    document.getElementById("output").innerText = 'خطأ: ' + status;
-                }
-            });
+                directionsService.route(request, (result, status) => {
+                    if (status === 'OK') {
+                        directionsRenderer.setDirections(result);
+                    } else {
+                        alert('Erreur: ' + status);
+                    }
+                });
+            } else {
+                alert('Veuillez entrer les deux lieux pour rechercher la distance entre eux.');
+            }
         }
 
         window.onload = initMap;
     </script>
-
 </body>
 </html>
