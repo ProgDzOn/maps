@@ -3,147 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recherche de Lieux</title>
+    <title>Distance Finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            background: url('https://source.unsplash.com/1600x900/?nature,landscape') no-repeat center center fixed;
-            background-size: cover;
-            font-family: 'Arial', sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             height: 100vh;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
             color: #fff;
-            text-align: center; /* نص مركزي */
+            text-align: center;
+            flex-direction: column;
+            padding: 20px;
         }
-        .header {
-            margin-bottom: 20px;
-            animation: fadeIn 2s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .search-box {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            padding: 30px;
-            width: 90%;
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
             max-width: 500px;
-            margin: 0 auto; /* توسيط الصندوق */
         }
         h2 {
-            color: #276495;
-            margin-bottom: 20px;
-            animation: slideIn 2s;
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            margin-bottom: 15px;
+            font-weight: 600;
         }
         input {
-            border: 2px solid #ccc;
-            border-radius: 4px;
-            padding: 12px;
             width: 100%;
-            font-size: 16px;
+            padding: 12px;
             margin: 10px 0;
-            background: #e7f1fa;
-            color: #333;
-            transition: border-color 0.3s;
-        }
-        input:focus {
-            border-color: #276495;
-            outline: none;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
         }
         button {
-            padding: 12px 20px;
-            cursor: pointer;
-            background-color: #276495;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
             width: 100%;
-            transition: background-color 0.3s;
+            padding: 12px;
+            background: #ff7b00;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
         }
         button:hover {
-            background-color: #1f4b73;
+            background: #d96a00;
         }
         .date-time {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 16px;
+            margin-top: 15px;
+            font-size: 14px;
         }
-        /* Media Queries لتكييف التصميم */
-        @media (max-width: 768px) {
-            .search-box {
+        @media (max-width: 600px) {
+            .container {
                 padding: 20px;
             }
             h2 {
-                font-size: 24px; /* حجم الخط على الهواتف */
+                font-size: 22px;
             }
             input, button {
-                font-size: 14px; /* حجم الخط للعناصر */
-            }
-        }
-        @media (max-width: 480px) {
-            .search-box {
-                padding: 15px;
-            }
-            h2 {
-                font-size: 20px; /* حجم الخط على الهواتف الصغيرة */
-            }
-            input, button {
-                font-size: 12px; /* حجم الخط للعناصر على الهواتف الصغيرة */
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>Recherche de Lieux</h2>
-        <div class="date-time" id="dateTime"></div>
-    </div>
-
-    <div class="search-box">
+    <div class="container">
+        <h2>🔍 Trouvez la Distance entre Deux Lieux</h2>
         <input type="text" id="place1" placeholder="Entrez le premier lieu" required>
         <input type="text" id="place2" placeholder="Entrez le deuxième lieu" required>
         <button onclick="searchPlaces()">Rechercher la Distance</button>
+        <div class="date-time" id="dateTime"></div>
     </div>
-
     <script>
         function searchPlaces() {
             const place1 = document.getElementById('place1').value;
             const place2 = document.getElementById('place2').value;
-
             if (place1 && place2) {
                 const formattedPlace1 = encodeURIComponent(place1);
                 const formattedPlace2 = encodeURIComponent(place2);
-
                 const url = `https://www.google.com/maps/dir/${formattedPlace1}/${formattedPlace2}`;
                 window.open(url, '_blank');
             } else {
-                alert('Veuillez entrer les deux lieux pour rechercher la distance entre eux.');
+                alert('Veuillez entrer les deux lieux.');
             }
         }
-
         function updateDateTime() {
             const now = new Date();
             const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
             document.getElementById('dateTime').textContent = now.toLocaleString('fr-FR', options);
         }
-
-        setInterval(updateDateTime, 1000); // تحديث الوقت كل ثانية
-        window.onload = updateDateTime; // عرض الوقت عند تحميل الصفحة
+        setInterval(updateDateTime, 1000);
+        window.onload = updateDateTime;
     </script>
 </body>
 </html>
+
